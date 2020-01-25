@@ -64,11 +64,39 @@ sheet = function(index){
    
    this.getActiveSheet = function(){
      return this.activeSheet;
+   } 
+   
+   this.getRange = function(row, column,startColumn, endColumn){
+     return this.activeSheet.getRange(row, column, startColumn, endColumn).getValues()[0]; 
    }
-
+ 
 }
 
 
+// allows the drop downs for the form to be generated from a list located in the google sheets 
+// Provides more flexibility in terms of categories for main cat and sec cat 
+FormDropDownUtil = function(){ 
+   var form = FormApp.openByUrl("https://docs.google.com/forms/d/1jyTLeItitQDcEdRUf17NASFQDxDQNZ9p0kkXbjqHWx4/edit"); 
+   
+   this.getDropDown = function(dropDownTitle){
+       var formItems = form.getItems(); 
+       var formItemTitles = formItems.map(function(item){ 
+       return item.getTitle(); }); 
+       var posOfDropDown = formItemTitles.indexOf(dropDownTitle); 
+       var dropDown = formItems[posOfDropDown]; 
+       var dropDownID = dropDown.getId();  
+       
+       return dropDownID;
+    } 
+    
+    this.assignDropDownValues = function(dropDownId, values){
+         var dropDown = form.getItemById(dropDownId); 
+         dropDown.asListItem().setChoiceValues(values);
+    }
+   
+
+  
+}
 
 
 function sort(array){
